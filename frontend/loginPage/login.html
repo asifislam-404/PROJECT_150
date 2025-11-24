@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Management System - Authentication</title>
+    <link rel="stylesheet" href="./login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🏦</div>
+            <h1 id="pageTitle">Welcome Back</h1>
+            <p id="pageSubtitle">Login to manage your finances</p>
+        </div>
+
+        <div class="form-container">
+            <!-- Login Page -->
+            <div id="loginPage" class="page active">
+                <div id="loginMessage" class="success-message"></div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email or Username</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📧</span>
+                            <input type="text" id="loginEmail" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                            <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+
+                <div class="link">
+                    <a onclick="showPage('forgot')">Forgot Password?</a>
+                </div>
+                <div class="link">
+                    Don't have an account? <a onclick="showPage('signup')">Sign Up</a>
+                </div>
+            </div>
+
+            <!-- Signup Page -->
+            <div id="signupPage" class="page">
+                <div id="signupMessage" class="error-message"></div>
+                
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="signupName" placeholder="Enter your full name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📧</span>
+                            <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📱</span>
+                            <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="signupPassword" placeholder="Create a password" required>
+                            <span class="password-toggle" onclick="togglePassword('signupPassword')">👁️</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+                            <span class="password-toggle" onclick="togglePassword('signupConfirmPassword')">👁️</span>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to Terms & Conditions</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </form>
+
+                <div class="link">
+                    Already have an account? <a onclick="showPage('login')">Login</a>
+                </div>
+            </div>
+
+            <!-- OTP Verification Page -->
+            <div id="otpPage" class="page">
+                <div class="email-icon">📧</div>
+                
+                <div id="otpMessage" class="error-message"></div>
+                
+                <div class="otp-info">
+                    We've sent a 6-digit verification code to<br>
+                    <strong id="otpEmail">user@example.com</strong>
+                </div>
+
+                <form id="otpForm">
+                    <div class="otp-container">
+                        <input type="text" class="otp-input" maxlength="1" id="otp1" onkeyup="moveToNext(this, 'otp2')" onkeydown="moveToPrev(event, this, null)" required>
+                        <input type="text" class="otp-input" maxlength="1" id="otp2" onkeyup="moveToNext(this, 'otp3')" onkeydown="moveToPrev(event, this, 'otp1')" required>
+                        <input type="text" class="otp-input" maxlength="1" id="otp3" onkeyup="moveToNext(this, 'otp4')" onkeydown="moveToPrev(event, this, 'otp2')" required>
+                        <input type="text" class="otp-input" maxlength="1" id="otp4" onkeyup="moveToNext(this, 'otp5')" onkeydown="moveToPrev(event, this, 'otp3')" required>
+                        <input type="text" class="otp-input" maxlength="1" id="otp5" onkeyup="moveToNext(this, 'otp6')" onkeydown="moveToPrev(event, this, 'otp4')" required>
+                        <input type="text" class="otp-input" maxlength="1" id="otp6" onkeydown="moveToPrev(event, this, 'otp5')" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Verify OTP</button>
+                </form>
+
+                <div class="resend-section">
+                    Didn't receive code? 
+                    <button class="resend-btn" id="resendBtn" onclick="resendOTP()">Resend OTP</button>
+                    <span id="timerSection" style="display: none;">
+                        in <span class="timer" id="timer">60</span>s
+                    </span>
+                </div>
+
+                <div class="link">
+                    <a onclick="showPage('signup')">← Back to Signup</a>
+                </div>
+            </div>
+
+            <!-- Forgot Password Page -->
+            <div id="forgotPage" class="page">
+                <a class="back-btn" onclick="showPage('login')">← Back to Login</a>
+                
+                <div id="forgotMessage" class="success-message"></div>
+                
+                <form id="forgotForm">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📧</span>
+                            <input type="email" id="forgotEmail" placeholder="Enter your registered email" required>
+                        </div>
+                    </div>
+
+                    <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+                        We'll send you a password reset link to your email address.
+                    </p>
+
+                    <button type="submit" class="btn btn-primary">Send Reset Link</button>
+                    <button type="button" class="btn btn-secondary" onclick="showPage('login')">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="./login.js"></script>
+</body>
+</html>
