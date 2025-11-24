@@ -309,6 +309,106 @@
             line-height: 1.6;
         }
 
+        /* About Section */
+.about {
+    padding: 100px 50px;
+    background: #fdfdfd;
+}
+
+.about-container {
+    max-width: 1300px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    align-items: center;
+    gap: 50px;
+}
+
+.about-content .section-title {
+    text-align: left;
+}
+
+.about-content .section-subtitle {
+    text-align: left;
+}
+
+.about-text {
+    font-size: 17px;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 40px;
+}
+
+.about-highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+.about-item {
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 15px;
+    transition: 0.3s ease;
+    text-align: center;
+}
+
+.about-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    background: white;
+}
+
+.about-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #fff;
+}
+
+.about-item h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.about-item p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* About Image Side */
+.about-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-img-card {
+    width: 100%;
+    max-width: 450px;
+    height: 450px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+    animation: floatAnim 4s ease-in-out infinite;
+}
+
+/* Floating animation */
+@keyframes floatAnim {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0); }
+}
+
+
         /* Stats Section */
         .stats {
             padding: 80px 50px;
@@ -514,7 +614,7 @@
         </div>
 
         <ul class="nav-links" id="navLinks">
-            <li><a href="./index.html">Home</a></li>
+            <li><a href="#home">Home</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
@@ -611,6 +711,48 @@
             </div>
         </div>
     </section>
+
+    <section class="about" id="about">
+    <div class="about-container">
+        <div class="about-content">
+            <h2 class="section-title">About BankApp</h2>
+            <p class="section-subtitle">
+                A modern and secure digital banking platform designed for your financial freedom.
+            </p>
+
+            <p class="about-text">
+                BankApp is built to simplify the way you manage your money.  
+                With cutting-edge security, instant transactions, and smart analytics,  
+                we empower you to take full control of your finances anytime, anywhere.
+            </p>
+
+            <div class="about-highlights">
+                <div class="about-item">
+                    <div class="about-icon">🚀</div>
+                    <h3>Fast & Reliable</h3>
+                    <p>Lightning-quick operations powered by optimized banking infrastructure.</p>
+                </div>
+
+                <div class="about-item">
+                    <div class="about-icon">🛡️</div>
+                    <h3>Advanced Protection</h3>
+                    <p>Multi-layer encryption ensures your data and transactions stay safe.</p>
+                </div>
+
+                <div class="about-item">
+                    <div class="about-icon">🤝</div>
+                    <h3>Trusted Experience</h3>
+                    <p>Thousands of users trust BankApp for secure and seamless banking.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-image">
+            <div class="about-img-card"></div>
+        </div>
+    </div>
+</section>
+
 
     <!-- CTA Section -->
     <section class="cta" id="about">
