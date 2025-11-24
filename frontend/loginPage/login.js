@@ -28,12 +28,6 @@ const fs = require('fs');
             hideAllMessages();
         }
 
-        // Toggle Password Visibility
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            input.type = input.type === 'password' ? 'text' : 'password';
-        }
-
         // Hide all messages
         function hideAllMessages() {
             document.querySelectorAll('.success-message, .error-message').forEach(msg => {
@@ -57,10 +51,10 @@ const fs = require('fs');
         // Send OTP to email (In production, this would be an API call to your backend)
         async function sendOTPEmail(email, otp) {
             // DEMO: In production, send this to your backend API
-            console.log(`Sending OTP ${otp} to email: ${email}`);
+            console.log(`Sending OTP ৳{otp} to email: ৳{email}`);
             
             // For demo purposes, show OTP in console
-            alert(`DEMO MODE: Your OTP is ${otp}\n\n(In production, this will be sent to your email: ${email})`);
+            alert(`DEMO MODE: Your OTP is ৳{otp}\n\n(In production, this will be sent to your email: ৳{email})`);
             
             /* 
             PRODUCTION CODE - Replace the alert above with this:
@@ -87,162 +81,34 @@ const fs = require('fs');
         }
 
         // Login Form Handler
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
 
-            // Simulate login
-            if (email && password) {
-                showMessage('loginMessage', '✓ Login successful! Redirecting...', 'success');
-                
-            }
-        });
+    // Get users from localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    
+    // Find user with matching email and password
+    const user = users.find(u => u.email === email && u.password === password);
 
-        // Signup Form Handler
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+    window.location.href = '../dashBoard/dashboard.html';
+    if (user) {
+        // Save current user to localStorage
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        
+        showMessage('loginMessage', '✓ Login successful! Redirecting...', 'success');
+        
+        setTimeout(() => {
+            // Redirect to dashboard
+        }, 1500);
+    } else {
+        showMessage('loginMessage', '✗ Invalid email or password!', 'error');
+    }
+});
 
-            if (password !== confirmPassword) {
-                showMessage('signupMessage', '✗ Passwords do not match!', 'error');
-                return;
-            }
 
-            if (password.length < 6) {
-                showMessage('signupMessage', '✗ Password must be at least 6 characters!', 'error');
-                return;
-            }
-
-            // Store user data temporarily
-            const Data = {
-                name: document.getElementById('signupName').value,
-                email: document.getElementById('signupEmail').value,
-                phone: document.getElementById('signupPhone').value,
-                password: password
-            };
-
-            userData.push(Data);
-
-            fs.writeFile('userData.txt', JSON.stringify(userData), (err) => {
-                if (err) throw err;
-                console.log('User data saved!');
-            });
-
-            // Generate and send OTP
-            generatedOTP = generateOTP();
-            sendOTPEmail(userData.email, generatedOTP);
-
-            // Show OTP page
-            document.getElementById('otpEmail').textContent = userData.email;
-            showPage('otp');
-            startTimer();
-            
-            // Focus first OTP input
-            setTimeout(() => {
-                document.getElementById('otp1').focus();
-            }, 100);
-        });
-
-        // OTP Navigation
-        function moveToNext(current, nextFieldID) {
-            if (current.value.length >= 1) {
-                if (nextFieldID) {
-                    document.getElementById(nextFieldID).focus();
-                }
-            }
-        }
-
-        function moveToPrev(event, current, prevFieldID) {
-            if (event.key === 'Backspace' && current.value.length === 0) {
-                if (prevFieldID) {
-                    document.getElementById(prevFieldID).focus();
-                }
-            }
-        }
-
-        // OTP Form Handler
-        document.getElementById('otpForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get OTP from inputs
-            const otp = 
-                document.getElementById('otp1').value +
-                document.getElementById('otp2').value +
-                document.getElementById('otp3').value +
-                document.getElementById('otp4').value +
-                document.getElementById('otp5').value +
-                document.getElementById('otp6').value;
-
-            if (otp.length !== 6) {
-                showMessage('otpMessage', '✗ Please enter all 6 digits!', 'error');
-                return;
-            }
-
-            // Verify OTP
-            if (otp === generatedOTP) {
-                showMessage('otpMessage', '✓ Email verified successfully!', 'success');
-                
-                // Clear timer
-                clearInterval(timerInterval);
-                
-                // In production, send user data to backend to create account
-                setTimeout(() => {
-                    showMessage('loginMessage', '✓ Account created successfully! Please login.', 'success');
-                    showPage('login');
-                    
-                    // Reset OTP inputs
-                    document.getElementById('otpForm').reset();
-                    userData = {};
-                    generatedOTP = '';
-                }, 1500);
-            } else {
-                showMessage('otpMessage', '✗ Invalid OTP! Please try again.', 'error');
-                // Clear OTP inputs
-                document.getElementById('otp1').value = '';
-                document.getElementById('otp2').value = '';
-                document.getElementById('otp3').value = '';
-                document.getElementById('otp4').value = '';
-                document.getElementById('otp5').value = '';
-                document.getElementById('otp6').value = '';
-                document.getElementById('otp1').focus();
-            }
-        });
-
-        // Resend OTP Timer
-        function startTimer() {
-            let timeLeft = 60;
-            document.getElementById('resendBtn').disabled = true;
-            document.getElementById('timerSection').style.display = 'inline';
-            
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    document.getElementById('resendBtn').disabled = false;
-                    document.getElementById('timerSection').style.display = 'none';
-                }
-            }, 1000);
-        }
-
-        // Resend OTP
-        function resendOTP() {
-            generatedOTP = generateOTP();
-            sendOTPEmail(userData.email, generatedOTP);
-            startTimer();
-            
-            // Clear OTP inputs
-            document.getElementById('otpForm').reset();
-            document.getElementById('otp1').focus();
-            
-            showMessage('otpMessage', '✓ New OTP sent to your email!', 'success');
-            setTimeout(() => {
-                hideAllMessages();
-            }, 3000);
-        }
+    
 
         // Forgot Password Form Handler
         document.getElementById('forgotForm').addEventListener('submit', function(e) {
@@ -264,3 +130,107 @@ const fs = require('fs');
                 this.value = this.value.replace(/[^0-9]/g, '');
             });
         });
+
+
+        // Create Account Form Handler
+document.getElementById('createAccount').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get all form values
+    const formData = {
+        // Personal Information
+        name: document.getElementById('accountName').value,
+        dob: document.getElementById('accountDOB').value,
+        gender: document.getElementById('accountGender').value,
+        nationality: document.getElementById('accountNationality').value,
+        nationalID: document.getElementById('accountID').value,
+        
+        // Contact Information
+        email: document.getElementById('accountEmail').value,
+        phone: document.getElementById('accountPhone').value,
+        address: document.getElementById('accountAddress').value,
+        city: document.getElementById('accountCity').value,
+        state: document.getElementById('accountState').value,
+        zip: document.getElementById('accountZip').value,
+        country: document.getElementById('accountCountry').value,
+        
+        // Account Details
+        accountType: document.getElementById('accountType').value,
+        currency: document.getElementById('accountCurrency').value,
+        initialDeposit: document.getElementById('initialDeposit').value,
+        
+        // Employment Information
+        employmentStatus: document.getElementById('employmentStatus').value,
+        employerName: document.getElementById('employerName').value,
+        annualIncome: document.getElementById('annualIncome').value,
+        
+        // Security
+        pin: document.getElementById('transactionPIN').value,
+        confirmPIN: document.getElementById('confirmPIN').value,
+        securityQuestion: document.getElementById('securityQuestion').value,
+        securityAnswer: document.getElementById('securityAnswer').value,
+        
+        // Generate unique account number
+        accountNumber: 'ACC' + Date.now() + Math.floor(Math.random() * 1000),
+        createdDate: new Date().toISOString()
+    };
+    
+    // Validate PIN match
+    if (formData.pin !== formData.confirmPIN) {
+        showMessage('accountMessage', '✗ Transaction PINs do not match!', 'error');
+        return;
+    }
+    
+    // Validate PIN is 4 digits
+    if (formData.pin.length !== 4 || !/^\d{4}$/.test(formData.pin)) {
+        showMessage('accountMessage', '✗ PIN must be exactly 4 digits!', 'error');
+        return;
+    }
+    
+    // Validate initial deposit
+    if (parseFloat(formData.initialDeposit) < 100) {
+        showMessage('accountMessage', '✗ Initial deposit must be at least $100!', 'error');
+        return;
+    }
+    
+    // Store account in localStorage
+    let accounts = JSON.parse(localStorage.getItem('bankAccounts')) || [];
+    accounts.push(formData);
+    localStorage.setItem('bankAccounts', JSON.stringify(accounts));
+    
+    // Show success message
+    showMessage('accountMessage', '✓ Bank account created successfully! Account Number: ' + formData.accountNumber, 'success');
+    
+    // Reset form and redirect after 3 seconds
+    setTimeout(() => {
+        this.reset();
+        alert('Your account has been created!\nAccount Number: ' + formData.accountNumber + '\nPlease save this for your records.');
+        showPage('login'); // Redirect to login or dashboard
+    }, 2000);
+});
+
+// PIN validation - only numbers
+document.getElementById('transactionPIN').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+document.getElementById('confirmPIN').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+// Age validation - must be 18+
+document.getElementById('accountDOB').addEventListener('change', function(e) {
+    const dob = new Date(this.value);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+    
+    if (age < 18) {
+        alert('You must be at least 18 years old to open a bank account.');
+        this.value = '';
+    }
+});
